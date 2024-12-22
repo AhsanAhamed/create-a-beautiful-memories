@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
     <style>
-        /* Fullscreen background video */
         .video-background {
             position: fixed;
             top: 0;
@@ -19,20 +18,6 @@
             z-index: -1;
         }
 
-        /* Animation effect for background */
-        @keyframes backgroundAnim {
-            0% {
-                transform: scale(1.05);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1.05);
-            }
-        }
-
-        /* Body and container styling */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #fff;
@@ -59,11 +44,6 @@
             color: #2575fc;
         }
 
-        .form-control {
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
         .btn-primary {
             background-color: #2575fc;
             border: none;
@@ -77,23 +57,6 @@
             background-color: #1d5bb2;
         }
 
-        .form-label {
-            font-weight: 500;
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 0.875rem;
-        }
-
-        .success-message {
-            color: #28a745;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        /* Dark Mode Styles */
         .dark-mode {
             background-color: #333;
             color: #f4f7f6;
@@ -101,20 +64,6 @@
 
         .dark-mode .container {
             background-color: rgba(50, 50, 50, 0.9);
-        }
-
-        .dark-mode .form-control {
-            background-color: #555;
-            color: #f4f7f6;
-            border-color: #444;
-        }
-
-        .dark-mode .btn-primary {
-            background-color: #0056b3;
-        }
-
-        .dark-mode .btn-primary:hover {
-            background-color: #003366;
         }
 
         .toggle-btn {
@@ -129,25 +78,12 @@
         .toggle-btn.dark-mode-btn {
             color: #f1c40f;
         }
-
-        .text-center {
-            margin-top: 20px;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <!-- Dark mode toggle button -->
     <button class="toggle-btn" id="toggleBtn" onclick="toggleDarkMode()">🌙</button>
 
-    <!-- Background video -->
     <video autoplay muted loop class="video-background">
         <source src="background.mp4" type="video/mp4">
         Your browser does not support the video tag.
@@ -159,159 +95,35 @@
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" id="username" class="form-control" required minlength="4" maxlength="16">
-                <div class="error-message" id="usernameError"></div>
             </div>
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control" required>
-                <div class="error-message" id="emailError"></div>
-            </div>
-
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="tel" name="phone" id="phone" class="form-control" required pattern="[\+]?[0-9]{10,15}">
-                <div class="error-message" id="phoneError"></div>
-            </div>
-
-            <div class="mb-3">
-                <label for="dob" class="form-label">Date of Birth</label>
-                <input type="date" name="dob" id="dob" class="form-control" required>
-                <div class="error-message" id="dobError"></div>
             </div>
 
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" name="password" id="password" class="form-control" required minlength="8" maxlength="20">
-                <div class="error-message" id="passwordError"></div>
-                <div id="passwordStrength" class="error-message"></div>
             </div>
 
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">Confirm Password</label>
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
-                <div class="error-message" id="confirmPasswordError"></div>
-            </div>
-
-            <button type="submit" id="submitButton" class="btn btn-primary" disabled>Create Account</button>
+            <button type="submit" id="submitButton" class="btn btn-primary">Create Account</button>
         </form>
-
-        <div class="success-message" id="successMessage"></div>
     </div>
 
     <script>
-        const form = document.getElementById('signupForm');
-        const submitButton = document.getElementById('submitButton');
-        const successMessage = document.getElementById('successMessage');
-
-        const username = document.getElementById('username');
-        const email = document.getElementById('email');
-        const phone = document.getElementById('phone');
-        const dob = document.getElementById('dob');
-        const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirm_password');
-        const passwordStrength = document.getElementById('passwordStrength');
-
-        // Dark mode toggle function
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-            const toggleBtn = document.getElementById('toggleBtn');
-            if (document.body.classList.contains('dark-mode')) {
-                toggleBtn.textContent = '🌞';  // Change icon to sun when dark mode is active
-                toggleBtn.classList.add('dark-mode-btn');
-            } else {
-                toggleBtn.textContent = '🌙';  // Change icon to moon when dark mode is inactive
-                toggleBtn.classList.remove('dark-mode-btn');
-            }
+            let toggleButton = document.getElementById('toggleBtn');
+            toggleButton.innerHTML = document.body.classList.contains('dark-mode') ? '🌙' : '🌑';
         }
 
-        // Password strength check
-        function checkPasswordStrength() {
-            const passwordValue = password.value;
-            const regexUpper = /[A-Z]/;
-            const regexLower = /[a-z]/;
-            const regexNumber = /[0-9]/;
-            const regexSpecial = /[!@#\$%\^\&*\)\(+=._-]/;
-
-            let strength = 0;
-            if (regexUpper.test(passwordValue)) strength++;
-            if (regexLower.test(passwordValue)) strength++;
-            if (regexNumber.test(passwordValue)) strength++;
-            if (regexSpecial.test(passwordValue)) strength++;
-
-            let strengthText = '';
-            if (strength === 0) {
-                strengthText = 'Weak';
-            } else if (strength === 1) {
-                strengthText = 'Medium';
-            } else if (strength >= 2) {
-                strengthText = 'Strong';
-            }
-            passwordStrength.textContent = `Password Strength: ${strengthText}`;
-        }
-
-        // Form validation function
-        function validateForm() {
-            let isValid = true;
-            // Clear previous errors
-            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-
-            // Username validation
-            if (username.value.length < 4 || username.value.length > 16) {
-                document.getElementById('usernameError').textContent = 'Username should be between 4 and 16 characters';
-                isValid = false;
-            }
-
-            // Email validation
-            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-            if (!emailPattern.test(email.value)) {
-                document.getElementById('emailError').textContent = 'Please enter a valid email address';
-                isValid = false;
-            }
-
-            // Phone validation
-            const phonePattern = /^[\+]?[0-9]{10,15}$/;
-            if (!phonePattern.test(phone.value)) {
-                document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
-                isValid = false;
-            }
-
-            // Date of birth validation
-            if (!dob.value) {
-                document.getElementById('dobError').textContent = 'Date of Birth is required';
-                isValid = false;
-            }
-
-            // Password validation
-            if (password.value.length < 8 || password.value.length > 20) {
-                document.getElementById('passwordError').textContent = 'Password should be between 8 and 20 characters';
-                isValid = false;
-            }
-
-            // Confirm Password validation
-            if (password.value !== confirmPassword.value) {
-                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-                isValid = false;
-            }
-
-            submitButton.disabled = !isValid;
-            return isValid;
-        }
-
-        // Event listeners
-        form.addEventListener('input', () => {
-            validateForm();
-            checkPasswordStrength();
-        });
-
-        form.addEventListener('submit', (event) => {
+        document.getElementById('signupForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            if (validateForm()) {
-                successMessage.textContent = 'Account successfully created!';
-                form.reset();
-                submitButton.disabled = true;
-            }
+            alert("Account created successfully! Redirecting to memories page.");
+            window.location.href = "memories.html";
         });
     </script>
+
 </body>
 </html>
